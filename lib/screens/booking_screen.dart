@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../widgets/ai_concierge_widget.dart';
 import 'vehicle_selection_screen.dart';
+import 'profile_screen.dart';
+import 'notifications_screen.dart';
 
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
@@ -115,24 +117,66 @@ class _BookingScreenState extends State<BookingScreen> {
         ),
         Row(
           children: [
-            _iconButton(Icons.notifications_outlined),
+            _navIconButton(
+              Icons.notifications_outlined,
+              badge: 2,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              ),
+            ),
             const SizedBox(width: 8),
-            _iconButton(Icons.person_outline_rounded),
+            _navIconButton(
+              Icons.person_outline_rounded,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              ),
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _iconButton(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+  Widget _navIconButton(IconData icon, {int badge = 0, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withOpacity(0.08)),
+            ),
+            child: Icon(icon, color: Colors.white70, size: 22),
+          ),
+          if (badge > 0)
+            Positioned(
+              right: -4,
+              top: -4,
+              child: Container(
+                width: 18,
+                height: 18,
+                decoration: const BoxDecoration(
+                  color: AppColors.deepOrange,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '$badge',
+                    style: GoogleFonts.poppins(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
-      child: Icon(icon, color: Colors.white70, size: 22),
     );
   }
 
@@ -215,19 +259,28 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                   const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.warmOrange.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: AppColors.warmOrange.withOpacity(0.3),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        final temp = _pickUp;
+                        _pickUp = _dropOff;
+                        _dropOff = temp;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.warmOrange.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.warmOrange.withOpacity(0.3),
+                        ),
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.swap_vert_rounded,
-                      color: AppColors.warmOrange,
-                      size: 20,
+                      child: const Icon(
+                        Icons.swap_vert_rounded,
+                        color: AppColors.warmOrange,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ],
@@ -492,9 +545,9 @@ class _BookingScreenState extends State<BookingScreen> {
 
   Widget _buildPopularRoutes() {
     final routes = [
-      {'from': 'Airport', 'to': 'Belek', 'price': '€35', 'time': '~30 min'},
-      {'from': 'Airport', 'to': 'Kaleici', 'price': '€20', 'time': '~20 min'},
-      {'from': 'Airport', 'to': 'Kemer', 'price': '€50', 'time': '~55 min'},
+      {'from': 'Airport', 'to': 'Belek', 'price': '€35', 'time': '~30 min', 'vehicle': 'VIP Vito', 'vIcon': 'shuttle'},
+      {'from': 'Airport', 'to': 'Kaleici', 'price': '€20', 'time': '~20 min', 'vehicle': 'Economy Sedan', 'vIcon': 'car'},
+      {'from': 'Airport', 'to': 'Kemer', 'price': '€50', 'time': '~55 min', 'vehicle': 'Comfort Plus', 'vIcon': 'car_filled'},
     ];
 
     return Column(
@@ -510,7 +563,7 @@ class _BookingScreenState extends State<BookingScreen> {
         ),
         const SizedBox(height: 14),
         SizedBox(
-          height: 120,
+          height: 150,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
@@ -518,8 +571,13 @@ class _BookingScreenState extends State<BookingScreen> {
             separatorBuilder: (_, __) => const SizedBox(width: 14),
             itemBuilder: (context, index) {
               final route = routes[index];
+              final vIcon = route['vIcon'] == 'shuttle'
+                  ? Icons.airport_shuttle_rounded
+                  : route['vIcon'] == 'car_filled'
+                      ? Icons.directions_car_filled_rounded
+                      : Icons.directions_car_rounded;
               return Container(
-                width: 180,
+                width: 190,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: AppColors.cardGradient,
@@ -589,6 +647,40 @@ class _BookingScreenState extends State<BookingScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: AppColors.warmOrange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.warmOrange.withOpacity(0.2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(vIcon,
+                              size: 14, color: AppColors.warmOrange),
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              route['vehicle']!,
+                              style: GoogleFonts.poppins(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.warmOrange,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Icon(Icons.trending_up_rounded,
+                              size: 12,
+                              color: AppColors.warmOrange.withOpacity(0.7)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
