@@ -1,4 +1,4 @@
-name: antapp
+name: rayride
 description: Tourist transportation booking platform for Antalya.
 publish_to: 'none'
 version: 1.0.0+1

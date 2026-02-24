@@ -1,4 +1,4 @@
-package com.antapp.antapp
+package com.rayride.rayride
 
 import io.flutter.embedding.android.FlutterActivity
 

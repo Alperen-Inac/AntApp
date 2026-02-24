@@ -106,7 +106,7 @@ class _BookingScreenState extends State<BookingScreen> {
             ),
             const SizedBox(width: 10),
             Text(
-              'AntApp',
+              'RayRide',
               style: GoogleFonts.poppins(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,

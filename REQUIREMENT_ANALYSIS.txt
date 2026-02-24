@@ -1,0 +1,633 @@
+================================================================================
+  RAYRIDE - REQUIREMENT ENGINEERING & GAP ANALYSIS
+  Karşılaştırma Bazlı Eksik Özellik Analizi
+  Tarih: 24 Şubat 2026
+================================================================================
+
+Karşılaştırılan Popüler Uygulamalar:
+  - Welcome Pickups (Turist transfer - 360+ şehir, TripAdvisor ödüllü)
+  - GetTransfer (Global transfer marketplace - 180+ ülke)
+  - Blacklane (Premium şoför servisi - 50+ ülke)
+  - Uber / Uber Reserve (Genel ride-hailing - 700+ havaalanı)
+  - Bolt (Ride-hailing - 600+ şehir)
+  - BiTaksi (Türkiye'nin en popüler taksi uygulaması)
+  - Kiwitaxi (Transfer booking - 102 ülke)
+  - Hoppa / HolidayTaxis (Tatil transferleri)
+
+================================================================================
+  MEVCUT DURUM ÖZETİ
+================================================================================
+
+RayRide şu anda şu özelliklere sahip:
+  [✓] Konum seçimi (alış/bırakış)
+  [✓] Tarih ve saat seçimi
+  [✓] Araç seçimi (5 farklı araç)
+  [✓] Rezervasyon onay ekranı
+  [✓] Ödeme yöntemi seçimi (Kredi Kartı, PayPal, Nakit)
+  [✓] Fiyat hesaplama (%5 servis ücreti)
+  [✓] AI Concierge sohbet (mock)
+  [✓] Bildirimler ekranı (filtreleme ile)
+  [✓] Profil ekranı (istatistikler, gezi geçmişi)
+  [✓] Popüler rotalar
+  [✓] Karanlık tema, sunset renk paleti
+  [✓] Çoklu platform (Web, iOS, Android, Desktop)
+
+Kritik Eksiklikler:
+  [✗] Backend/API entegrasyonu yok - tüm veriler hardcoded
+  [✗] Kimlik doğrulama (authentication) yok
+  [✗] Gerçek ödeme işleme yok
+  [✗] State management yok
+  [✗] Gerçek zamanlı takip yok
+  [✗] Push notification yok
+
+================================================================================
+  KATEGORİ 1: KİMLİK DOĞRULAMA & KULLANICI YÖNETİMİ
+================================================================================
+
+Öncelik: KRİTİK
+
+1.1 Kullanıcı Kayıt/Giriş Sistemi
+    Kaynak: Tüm rakipler
+    Açıklama: E-posta, telefon numarası veya sosyal medya (Google, Apple,
+    Facebook) ile kayıt ve giriş. SMS/e-posta OTP doğrulama.
+    Durum: RayRide'te YOK
+
+1.2 Misafir Olarak Devam Etme (Guest Mode)
+    Kaynak: Uber, Bolt, GetTransfer
+    Açıklama: Kayıt olmadan hızlıca rezervasyon yapabilme. İlk deneyimi
+    kolaylaştırır, dönüşüm oranını artırır.
+    Durum: RayRide'te YOK
+
+1.3 Profil Yönetimi
+    Kaynak: Tüm rakipler
+    Açıklama: İsim, fotoğraf, telefon, e-posta düzenleme. Tercih edilen
+    dil, para birimi, bildirim tercihleri ayarlama.
+    Durum: RayRide'te statik/mock profil var, düzenlenemiyor
+
+1.4 Çoklu Yolcu Profili
+    Kaynak: Welcome Pickups, Kiwitaxi
+    Açıklama: Aile üyeleri veya sık birlikte seyahat edilen kişiler için
+    profiller oluşturma. Rezervasyonda hızlıca seçme.
+    Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 2: REZERVASYON AKIŞI GELİŞTİRMELERİ
+================================================================================
+
+Öncelik: KRİTİK
+
+2.1 Uçuş Numarası Girişi ve Uçuş Takibi
+    Kaynak: Welcome Pickups, GetTransfer, Blacklane, Uber Reserve
+    Açıklama: Kullanıcı uçuş numarasını girer, sistem otomatik olarak
+    uçuş durumunu takip eder. Uçuş gecikmesinde şoför bilgilendirilir
+    ve alış saati otomatik güncellenir. 
+    Welcome Pickups: 1 saat ücretsiz bekleme süresi
+    GetTransfer: Havaalanında 60dk, tren istasyonunda 30dk ücretsiz bekleme
+    Blacklane: 1 saat ücretsiz bekleme + otomatik uçuş takibi
+    Durum: RayRide'te YOK - çok kritik eksiklik
+
+2.2 Gidiş-Dönüş Rezervasyonu (Round Trip)
+    Kaynak: GetTransfer, Kiwitaxi, Hoppa
+    Açıklama: Tek seferde hem gidiş hem dönüş transferi rezerve etme.
+    Genellikle indirimli fiyat sunulur.
+    Durum: RayRide'te YOK
+
+2.3 Çoklu Durak (Multi-Stop)
+    Kaynak: Uber, Bolt, Blacklane
+    Açıklama: Bir transfer sırasında birden fazla durak ekleme.
+    Örn: Havaalanı → Otel 1 → Otel 2
+    Durum: RayRide'te YOK
+
+2.4 Saatlik Kiralama (Hourly Booking)
+    Kaynak: Blacklane, GetTransfer
+    Açıklama: Saatlik veya günlük şoförlü araç kiralama. Şehir turu,
+    iş toplantıları veya gün boyu kullanım için ideal.
+    Blacklane: Saatlik ve tam gün kiralama seçenekleri
+    Durum: RayRide'te YOK
+
+2.5 Planlı/İleri Tarihli Rezervasyon
+    Kaynak: Uber Reserve (90 gün önceden), Bolt (90 gün)
+    Açıklama: 90 güne kadar önceden rezervasyon yapabilme.
+    Mevcut durumda RayRide'te tarih seçimi var ama backend olmadığı
+    için gerçek bir ileri tarihli rezervasyon yapılamıyor.
+    Durum: UI var ama fonksiyonel DEĞİL
+
+2.6 Özel İstekler (Special Requests)
+    Kaynak: Kiwitaxi, Welcome Pickups, GetTransfer
+    Açıklama: Rezervasyon sırasında özel istekler belirtme:
+    - Çocuk koltuğu (bebek, 1-3 yaş, 4-7 yaş)
+    - Evcil hayvan taşıma
+    - Büyük/fazla bagaj
+    - İngilizce konuşan şoför
+    - Tekerlekli sandalye erişimi
+    - Karşılama tabelası
+    - Wi-Fi ihtiyacı
+    Durum: RayRide'te YOK
+
+2.7 Rota Önizleme ve Harita Entegrasyonu
+    Kaynak: Tüm rakipler
+    Açıklama: Google Maps / Apple Maps entegrasyonu ile rotanın harita
+    üzerinde gösterimi, tahmini süre ve mesafe bilgisi.
+    Durum: RayRide'te YOK - sadece metin bazlı konum seçimi var
+
+2.8 Paylaşımlı Transfer (Shared/Shuttle)
+    Kaynak: Uber Shuttle, Hoppa, GetTransfer
+    Açıklama: Aynı yöne giden yolcuların paylaşımlı transfer ile daha
+    ucuza seyahat etmesi. Bütçe dostu seçenek.
+    Durum: RayRide'te YOK
+
+2.9 Şehirler Arası Transfer
+    Kaynak: Welcome Pickups, Blacklane, GetTransfer
+    Açıklama: Sadece havaalanı-otel değil, şehirler arası uzun mesafe
+    transferler. Örn: Antalya → Kapadokya
+    Durum: RayRide'te YOK (sadece Antalya bölgesi içi)
+
+================================================================================
+  KATEGORİ 3: GERÇEK ZAMANLI ÖZELLİKLER
+================================================================================
+
+Öncelik: KRİTİK
+
+3.1 Canlı Şoför/Araç Takibi (Live Tracking)
+    Kaynak: Tüm rakipler
+    Açıklama: Harita üzerinde şoförün anlık konumunu görme. Tahmini
+    varış süresi (ETA) canlı güncelleme.
+    Uber: Gerçek zamanlı GPS takibi
+    Bolt: Gerçek zamanlı şoför takibi
+    BiTaksi: Araç ve plaka detayları ile canlı takip
+    Durum: RayRide'te YOK
+
+3.2 Şoför Bilgileri
+    Kaynak: Tüm rakipler
+    Açıklama: Rezervasyon onaylandıktan sonra şoför adı, fotoğrafı,
+    araç bilgileri (marka, model, renk, plaka) gösterimi.
+    Welcome Pickups: Gün öncesinden şoför bilgisi gönderir
+    Durum: RayRide'te YOK
+
+3.3 Push Notification Sistemi
+    Kaynak: Tüm rakipler
+    Açıklama: Gerçek push bildirimleri:
+    - Rezervasyon onayı
+    - Şoför yola çıktı
+    - Şoför yaklaştı / geldi
+    - Uçuş gecikme bildirimi
+    - Ödeme alındı
+    - Promosyon/indirim bildirimleri
+    Durum: RayRide'te mock bildirimler var, gerçek push notification YOK
+
+3.4 Konum Paylaşımı (Trip Sharing)
+    Kaynak: Uber, Bolt, BiTaksi
+    Açıklama: Yolculuk detaylarını ve canlı konumu yakınlarla paylaşma.
+    Güvenlik açısından önemli özellik.
+    BiTaksi: "Trip sharing with loved ones for safety"
+    Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 4: ÖDEME & FİYATLANDIRMA
+================================================================================
+
+Öncelik: YÜKSEK
+
+4.1 Gerçek Ödeme Entegrasyonu
+    Kaynak: Tüm rakipler
+    Açıklama: Stripe, iyzico (Türkiye için), PayPal gibi ödeme
+    gateway entegrasyonu. Kredi/banka kartı ile gerçek ödeme.
+    Durum: RayRide'te sadece UI var, gerçek ödeme YOK
+
+4.2 Dijital Cüzdan Desteği
+    Kaynak: Uber, Bolt, Welcome Pickups, GetTransfer
+    Açıklama: Apple Pay, Google Pay, Samsung Pay desteği.
+    NFC tabanlı temassız ödeme.
+    Durum: RayRide'te YOK
+
+4.3 Uygulama İçi Cüzdan / Kredi Sistemi
+    Kaynak: Uber, Bolt
+    Açıklama: Uygulama içi bakiye yükleme, promosyon kodları ile
+    kredi ekleme, bakiye ile ödeme.
+    Durum: RayRide'te YOK
+
+4.4 Otomatik Para Birimi Dönüşümü
+    Kaynak: GetTransfer, Welcome Pickups
+    Açıklama: Kullanıcının bulunduğu ülkeye veya tercihine göre
+    otomatik para birimi dönüşümü. Turistler için çok önemli.
+    Mevcut fiyatlar sadece EUR - TRY, USD, GBP desteği de olmalı.
+    Durum: RayRide'te YOK (sadece EUR)
+
+4.5 Fiyat Karşılaştırma / Fiyat Garantisi
+    Kaynak: GetTransfer, Hoppa
+    Açıklama: Farklı sağlayıcıların fiyatlarını karşılaştırma.
+    GetTransfer: Fiyat eşleme garantisi ve fark iadesi.
+    Durum: RayRide'te YOK
+
+4.6 Surge Pricing Koruması / Sabit Fiyat Garantisi
+    Kaynak: Welcome Pickups, Blacklane, GetTransfer
+    Açıklama: Surge pricing olmadan sabit fiyat garantisi.
+    "No hidden fees" politikası. Turistler için güven verici.
+    Durum: RayRide'te sabit fiyat var ama garanti/politika belirtilmemiş
+
+4.7 Fatura / Fiş Sistemi
+    Kaynak: Tüm rakipler
+    Açıklama: Dijital fatura/fiş oluşturma ve e-posta ile gönderme.
+    PDF indirme. Kurumsal kullanıcılar için fatura bilgileri.
+    GetTransfer: Anında e-fiş
+    Durum: RayRide'te YOK
+
+4.8 Bahşiş Sistemi
+    Kaynak: Uber, Bolt, GetTransfer, Blacklane
+    Açıklama: Yolculuk sonrası şoföre uygulama içinden bahşiş verme.
+    Durum: RayRide'te YOK
+
+4.9 Ücretsiz İptal Politikası
+    Kaynak: Uber Reserve (1 saat öncesine kadar), Blacklane (1 saat),
+            GetTransfer (48 saat)
+    Açıklama: Belirli süre öncesine kadar ücretsiz iptal.
+    Net iptal/iade politikası gösterimi.
+    Durum: RayRide'te iptal mekanizması YOK
+
+================================================================================
+  KATEGORİ 5: GÜVENLİK & GÜVEN
+================================================================================
+
+Öncelik: YÜKSEK
+
+5.1 Şoför Doğrulama ve Derecelendirme Sistemi
+    Kaynak: Tüm rakipler
+    Açıklama: Şoför kimlik doğrulama, sabıka kaydı kontrolü,
+    ehliyet doğrulama. Kullanıcı puanlama sistemi (1-5 yıldız).
+    GetTransfer: Tamamlanan yolculuk geçmişi ve puan görünür
+    Durum: RayRide'te YOK
+
+5.2 Araç Doğrulama
+    Kaynak: GetTransfer, Kiwitaxi
+    Açıklama: Araçların gerçek fotoğrafları, yaş sınırı (max 7 yaş),
+    sigorta durumu, bakım kontrolleri.
+    Durum: RayRide'te YOK
+
+5.3 Acil Durum Butonu (SOS/Emergency)
+    Kaynak: Uber, Bolt
+    Açıklama: Yolculuk sırasında tek dokunuşla acil yardım çağırma.
+    Bolt: Acil durum butonu + sesli yolculuk kaydı
+    Durum: RayRide'te YOK
+
+5.4 Yolculuk Kaydı (Trip Recording)
+    Kaynak: Bolt
+    Açıklama: Yolculuk sırasında sesli kayıt özelliği.
+    Anlaşmazlık durumunda kanıt olarak kullanılabilir.
+    Durum: RayRide'te YOK
+
+5.5 Kimlik Doğrulama Eşleşmesi
+    Kaynak: Welcome Pickups, Blacklane
+    Açıklama: Havaalanında isim tabelası ile karşılama.
+    Şoför-yolcu eşleşme doğrulaması.
+    Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 6: İLETİŞİM
+================================================================================
+
+Öncelik: YÜKSEK
+
+6.1 Uygulama İçi Şoför Mesajlaşma
+    Kaynak: Welcome Pickups, Uber, Bolt
+    Açıklama: Şoför ile doğrudan mesajlaşma. Telefon numarası
+    paylaşmadan iletişim kurma.
+    Welcome Pickups: In-app chat ile şoför desteği
+    Durum: RayRide'te YOK (AI Concierge var ama şoför ile değil)
+
+6.2 Maskelenmiş Telefon Araması
+    Kaynak: Uber, Bolt
+    Açıklama: Gerçek telefon numarasını paylaşmadan şoförü arama.
+    Gizlilik koruması.
+    Durum: RayRide'te YOK
+
+6.3 7/24 Canlı Müşteri Desteği
+    Kaynak: Welcome Pickups, Blacklane, GetTransfer
+    Açıklama: 7/24 canlı destek (chat, telefon).
+    Blacklane: Canlı chat veya arama ile destek
+    Durum: RayRide'te sadece mock "Help & Support" menü öğesi var
+
+6.4 Çok Dilli Destek
+    Kaynak: GetTransfer (çok dilli), BiTaksi (TR/EN)
+    Açıklama: Uygulama arayüzü ve müşteri desteğinin birden fazla
+    dilde sunulması. Antalya'ya gelen turistlerin dilleri:
+    - Türkçe, İngilizce, Almanca, Rusça, Arapça, Felemenkçe
+    Durum: RayRide'te sadece İngilizce var, çoklu dil desteği YOK
+
+================================================================================
+  KATEGORİ 7: SADAKAT & KULLANICI BAĞLILIĞI
+================================================================================
+
+Öncelik: ORTA-YÜKSEK
+
+7.1 Sadakat / Ödül Programı (Loyalty Program)
+    Kaynak: Welcome Pickups (WelcomeRewards - %8'e kadar geri kazanım)
+    Açıklama: Her yolculuktan puan kazanma, puanlarla indirim
+    veya ücretsiz transfer kazanma. Üyelik seviyeleri.
+    Durum: RayRide'te "Gold Member" badge var ama fonksiyonel değil
+
+7.2 Referans/Davet Sistemi (Referral Program)
+    Kaynak: Uber, Bolt
+    Açıklama: Arkadaş davet etme, hem davet eden hem davet edilen
+    için indirim/kredi kazanma.
+    Durum: RayRide'te YOK
+
+7.3 Promosyon Kodu Sistemi
+    Kaynak: Uber, Bolt, GetTransfer
+    Açıklama: İndirim kodları girme, kampanya bazlı promosyonlar.
+    İlk yolculuk indirimi, sezonsal kampanyalar.
+    Durum: RayRide'te YOK
+
+7.4 Favori Rotalar / Kayıtlı Adresler
+    Kaynak: Uber, Bolt, BiTaksi
+    Açıklama: Sık kullanılan rotaları ve adresleri kaydetme.
+    "Ev", "İş", "Otel" gibi etiketlerle hızlı erişim.
+    Durum: RayRide'te "Saved Routes" menüsü var ama fonksiyonel değil
+
+7.5 Değerlendirme ve Yorum Sistemi (Reviews)
+    Kaynak: Tüm rakipler
+    Açıklama: Yolculuk sonrası şoförü ve deneyimi puanlama.
+    Yazılı yorum bırakma. Diğer kullanıcıların yorumlarını görme.
+    Durum: RayRide'te profilde "Rating 4.9" gösterimi var ama
+    fonksiyonel değerlendirme sistemi YOK
+
+================================================================================
+  KATEGORİ 8: TURİST ODAKLI ÖZELLİKLER
+================================================================================
+
+Öncelik: YÜKSEK (Antalya turist transfer uygulaması olduğu için)
+
+8.1 Gezi / Tur Rezervasyonu
+    Kaynak: Welcome Pickups (özel gezi turları), Kiwitaxi
+    Açıklama: Sadece A→B transfer değil, şoförlü şehir turları.
+    Welcome Pickups: Yerel şoför eşliğinde özel gezi turları
+    Yarım gün, tam gün tur seçenekleri.
+    Durum: RayRide'te AI Concierge'de "Sightseeing" quick action var
+    ama gerçek tur rezervasyonu YOK
+
+8.2 Bilet ve Aktivite Satışı
+    Kaynak: Welcome Pickups (skip-the-line biletler)
+    Açıklama: Transfer ile birlikte turistik mekan biletleri,
+    aktivite biletleri satışı. Cross-selling fırsatı.
+    Örn: Aspendos antik tiyatro bileti, Düden Şelalesi turu
+    Durum: RayRide'te YOK
+
+8.3 Yerel Bilgi / Şehir Rehberi
+    Kaynak: Welcome Pickups
+    Açıklama: Antalya hakkında turistik bilgiler, restoran
+    önerileri, gezi rotaları, yerel ipuçları. AI Concierge
+    bunu yapabilir ama gerçek veri ile desteklenmeli.
+    Durum: RayRide'te mock AI Concierge var, gerçek veri YOK
+
+8.4 Otel Entegrasyonu
+    Kaynak: Hoppa, Kiwitaxi, BiTaksi (kurumsal)
+    Açıklama: Otel isimleri veritabanı, otel adreslerinin
+    otomatik tamamlanması, otel resepsiyonu ile koordinasyon.
+    Durum: RayRide'te sadece "Belek Hotel Zone" gibi genel lokasyonlar var
+
+8.5 Meet & Greet Servisi
+    Kaynak: Welcome Pickups, Blacklane
+    Açıklama: Havaalanı çıkışında isim tabelası ile karşılama.
+    Bagaj yardımı, araç kapısına kadar eşlik.
+    Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 9: KURUMSAL ÖZELLİKLER
+================================================================================
+
+Öncelik: ORTA
+
+9.1 Kurumsal Hesap (Business Account)
+    Kaynak: BiTaksi, Uber for Business, Bolt Business
+    Açıklama: Şirketler için merkezi faturalama, çalışan
+    yönetimi, harcama limitleri, raporlama.
+    Durum: RayRide'te YOK
+
+9.2 Otel / Seyahat Acentesi Paneli
+    Kaynak: Welcome Pickups (partner portal), Kiwitaxi
+    Açıklama: Otellerin ve seyahat acentelerinin müşterileri
+    için toplu transfer rezervasyonu yapabilmesi.
+    B2B model.
+    Durum: RayRide'te YOK
+
+9.3 API Erişimi / White-Label
+    Kaynak: GetTransfer, Onde
+    Açıklama: Otel web siteleri veya seyahat platformlarının
+    RayRide transferlerini kendi sitelerinden satabilmesi için API.
+    Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 10: TEKNİK ALTYAPI
+================================================================================
+
+Öncelik: KRİTİK
+
+10.1 Backend API Geliştirmesi
+     Açıklama: REST API veya GraphQL backend. Kullanıcı, araç,
+     şoför, rezervasyon, ödeme verilerinin sunucu tarafında
+     yönetimi. Tüm diğer özelliklerin temelini oluşturur.
+     Öneri: Firebase (Firestore + Cloud Functions) veya
+     Node.js/Express + PostgreSQL
+     Durum: RayRide'te backend YOK
+
+10.2 State Management
+     Açıklama: Uygulama içi durum yönetimi. Flutter için
+     Riverpod, Provider veya Bloc pattern.
+     Durum: RayRide'te state management YOK
+
+10.3 Veritabanı / Veri Kalıcılığı
+     Açıklama: Lokal (SQLite/Hive) ve uzak (Firestore/PostgreSQL)
+     veri depolama. Offline erişim.
+     Durum: RayRide'te tüm veriler hardcoded
+
+10.4 Harita Servisi Entegrasyonu
+     Açıklama: Google Maps SDK veya Mapbox entegrasyonu.
+     Adres otomatik tamamlama (Google Places API).
+     Rota çizimi, mesafe/süre hesaplama.
+     Durum: RayRide'te harita entegrasyonu YOK
+
+10.5 Konum Servisleri
+     Açıklama: GPS ile kullanıcının mevcut konumunu tespit etme.
+     "Beni bul" özelliği.
+     Durum: RayRide'te konum servisleri YOK
+
+10.6 Analytics ve Crash Reporting
+     Açıklama: Firebase Analytics, Crashlytics veya benzeri
+     araçlarla kullanıcı davranış analizi ve hata raporlama.
+     Durum: RayRide'te YOK
+
+10.7 Deep Linking
+     Açıklama: Web'den uygulamaya yönlendirme, paylaşılan
+     linklerin uygulamada açılması.
+     Durum: RayRide'te YOK
+
+10.8 Offline Modu
+     Açıklama: İnternet bağlantısı olmadan önceki rezervasyonları
+     görüntüleme, kaydedilmiş bilgilere erişim.
+     Durum: RayRide'te YOK
+
+================================================================================
+  KATEGORİ 11: SÜRDÜRÜLEBILIRLIK & EK DEĞER
+================================================================================
+
+Öncelik: DÜŞÜK-ORTA
+
+11.1 Karbon Ayak İzi Takibi
+     Kaynak: Blacklane (%100 karbon dengeleme)
+     Açıklama: Her yolculuğun karbon emisyonunu hesaplama ve
+     dengeleme seçeneği sunma. Çevreci turistler için artı değer.
+     Durum: RayRide'te YOK
+
+11.2 Elektrikli Araç Seçeneği
+     Kaynak: Bolt (Electric ride type)
+     Açıklama: Elektrikli araç ile transfer seçeneği.
+     Çevre dostu ulaşım tercih edenlere yönelik.
+     Durum: RayRide'te YOK
+
+11.3 Wi-Fi Bilgisi
+     Kaynak: Blacklane (araç içi Wi-Fi)
+     Açıklama: Hangi araçlarda Wi-Fi olduğunu belirtme.
+     Uzun transferlerde artı değer.
+     Durum: RayRide'te YOK
+
+================================================================================
+  ÖNCELİK SIRALAMASINA GÖRE YÜRÜTME PLANI (ROADMAP ÖNERİSİ)
+================================================================================
+
+─── FAZ 1: TEKNİK TEMEL (Sprint 1-3) ──────────────────────────────────────
+
+  [KRİTİK] 10.1 Backend API Geliştirmesi
+  [KRİTİK] 10.2 State Management (Riverpod/Bloc)
+  [KRİTİK] 10.3 Veritabanı / Veri Kalıcılığı
+  [KRİTİK] 1.1  Kullanıcı Kayıt/Giriş Sistemi
+  [KRİTİK] 1.2  Misafir Olarak Devam Etme
+
+─── FAZ 2: ÇEKİRDEK FONKSİYONELLİK (Sprint 4-6) ─────────────────────────
+
+  [KRİTİK] 10.4 Harita Servisi Entegrasyonu
+  [KRİTİK] 2.1  Uçuş Numarası Girişi ve Uçuş Takibi
+  [KRİTİK] 3.1  Canlı Şoför/Araç Takibi
+  [KRİTİK] 3.2  Şoför Bilgileri
+  [KRİTİK] 3.3  Push Notification Sistemi
+  [YÜKSEK] 4.1  Gerçek Ödeme Entegrasyonu
+
+─── FAZ 3: KULLANICI DENEYİMİ (Sprint 7-9) ────────────────────────────────
+
+  [YÜKSEK] 2.6  Özel İstekler (Çocuk koltuğu, evcil hayvan vb.)
+  [YÜKSEK] 2.2  Gidiş-Dönüş Rezervasyonu
+  [YÜKSEK] 2.7  Rota Önizleme ve Harita
+  [YÜKSEK] 4.2  Dijital Cüzdan Desteği
+  [YÜKSEK] 4.4  Otomatik Para Birimi Dönüşümü
+  [YÜKSEK] 6.1  Uygulama İçi Şoför Mesajlaşma
+  [YÜKSEK] 6.4  Çok Dilli Destek
+
+─── FAZ 4: GÜVENLİK & GÜVEN (Sprint 10-11) ────────────────────────────────
+
+  [YÜKSEK] 5.1  Şoför Doğrulama ve Derecelendirme
+  [YÜKSEK] 5.3  Acil Durum Butonu (SOS)
+  [YÜKSEK] 3.4  Konum Paylaşımı (Trip Sharing)
+  [YÜKSEK] 4.9  Ücretsiz İptal Politikası
+  [YÜKSEK] 4.7  Fatura / Fiş Sistemi
+
+─── FAZ 5: TURİST DENEYİMİ (Sprint 12-13) ────────────────────────────────
+
+  [YÜKSEK] 8.1  Gezi / Tur Rezervasyonu
+  [YÜKSEK] 8.4  Otel Entegrasyonu
+  [YÜKSEK] 8.5  Meet & Greet Servisi
+  [YÜKSEK] 8.2  Bilet ve Aktivite Satışı
+  [ORTA]   8.3  Yerel Bilgi / Şehir Rehberi (AI Concierge'i gerçek yapma)
+
+─── FAZ 6: BÜYÜME & BAĞLILIK (Sprint 14-15) ───────────────────────────────
+
+  [ORTA-YÜKSEK] 7.1  Sadakat / Ödül Programı
+  [ORTA-YÜKSEK] 7.2  Referans/Davet Sistemi
+  [ORTA-YÜKSEK] 7.3  Promosyon Kodu Sistemi
+  [ORTA-YÜKSEK] 7.5  Değerlendirme ve Yorum Sistemi
+  [ORTA]         7.4  Favori Rotalar / Kayıtlı Adresler
+  [ORTA]         4.3  Uygulama İçi Cüzdan
+
+─── FAZ 7: GELİŞMİŞ ÖZELLİKLER (Sprint 16+) ─────────────────────────────
+
+  [ORTA]   2.3  Çoklu Durak (Multi-Stop)
+  [ORTA]   2.4  Saatlik Kiralama
+  [ORTA]   2.8  Paylaşımlı Transfer (Shuttle)
+  [ORTA]   2.9  Şehirler Arası Transfer
+  [ORTA]   9.1  Kurumsal Hesap
+  [ORTA]   9.2  Otel / Seyahat Acentesi Paneli
+  [DÜŞÜK]  11.1 Karbon Ayak İzi Takibi
+  [DÜŞÜK]  11.2 Elektrikli Araç Seçeneği
+  [DÜŞÜK]  10.7 Deep Linking
+  [DÜŞÜK]  6.2  Maskelenmiş Telefon Araması
+
+================================================================================
+  RAKIP BAZLI ÖZET KARŞILAŞTIRMA TABLOSU
+================================================================================
+
+Özellik                     | RayRide | Welcome | GetTransfer | Blacklane | Uber | Bolt | BiTaksi
+---------------------------|--------|---------|-------------|-----------|------|------|--------
+Kayıt/Giriş               |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Uçuş Takibi               |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✗   |   ✗
+Canlı GPS Takip            |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Harita Entegrasyonu        |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Gerçek Ödeme               |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Dijital Cüzdan             |   ✗    |    ✓    |      ✓      |     ✗     |  ✓   |  ✓   |   △
+Çok Dilli Arayüz           |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Şoför Mesajlaşma           |   ✗    |    ✓    |      ✗      |     ✗     |  ✓   |  ✓   |   ✗
+Şoför Puanlama             |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+SOS / Acil Durum           |   ✗    |    ✗    |      ✗      |     ✗     |  ✓   |  ✓   |   ✗
+Gidiş-Dönüş                |   ✗    |    ✓    |      ✓      |     ✓     |  ✗   |  ✗   |   ✗
+Özel İstekler              |   ✗    |    ✓    |      ✓      |     ✗     |  ✗   |  ✗   |   ✓
+Tur Rezervasyonu           |   ✗    |    ✓    |      ✗      |     ✗     |  ✗   |  ✗   |   ✗
+Sadakat Programı           |   ✗    |    ✓    |      ✗      |     ✗     |  ✗   |  ✓   |   ✗
+Referans Sistemi           |   ✗    |    ✗    |      ✗      |     ✗     |  ✓   |  ✓   |   ✗
+Meet & Greet               |   ✗    |    ✓    |      ✗      |     ✓     |  ✗   |  ✗   |   ✗
+Saatlik Kiralama           |   ✗    |    ✗    |      ✓      |     ✓     |  ✗   |  ✗   |   ✗
+Kurumsal Hesap             |   ✗    |    ✗    |      ✗      |     ✗     |  ✓   |  ✓   |   ✓
+Karbon Dengeleme           |   ✗    |    ✗    |      ✗      |     ✓     |  ✗   |  ✗   |   ✗
+AI Asistan                 |   ✓    |    ✗    |      ✗      |     ✗     |  ✗   |  ✗   |   ✗
+Popüler Rotalar            |   ✓    |    ✗    |      ✗      |     ✗     |  ✗   |  ✗   |   ✗
+Push Bildirim              |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✓
+Ücretsiz İptal             |   ✗    |    ✓    |      ✓      |     ✓     |  ✓   |  ✓   |   ✗
+Konum Paylaşımı            |   ✗    |    ✗    |      ✓      |     ✗     |  ✓   |  ✗   |   ✓
+
+✓ = Var   ✗ = Yok   △ = Kısmi
+
+================================================================================
+  RAYRIDE'IN REKABET AVANTAJLARI (Rakiplerde Olmayan)
+================================================================================
+
+RayRide'in şu anda rakiplerinin çoğunda OLMAYAN iki özelliği var:
+
+  1. AI Concierge / AI Asistan
+     → Hiçbir rakip transfer uygulamasında yapay zeka destekli
+       concierge servisi yok. Bu özellik gerçek AI (GPT/Claude API)
+       ile desteklenirse çok güçlü bir farklılaştırıcı olur.
+
+  2. Popüler Rotalar Önerisi
+     → Transfer uygulamalarında genellikle olmayan bir özellik.
+       Turistler için karar vermeyi kolaylaştırır.
+
+  Bu iki özellik, RayRide'in "turist dostu akıllı transfer"
+  konumlandırması için güçlü farklılaştırıcılar. Bunları
+  geliştirip derinleştirmek stratejik olarak değerli.
+
+================================================================================
+  SONUÇ
+================================================================================
+
+RayRide, görsel tasarım ve temel UI akışı açısından iyi bir temele sahip.
+Ancak production-ready bir ürün haline gelmesi için yukarıdaki 50+ eksik
+özellikten en az ilk 3 fazdaki kritik ve yüksek öncelikli olanların
+tamamlanması gerekiyor.
+
+En acil ihtiyaçlar:
+  1. Backend altyapısı ve gerçek veri yönetimi
+  2. Kullanıcı kimlik doğrulama sistemi
+  3. Harita ve konum servisleri entegrasyonu
+  4. Gerçek ödeme sistemi entegrasyonu
+  5. Canlı takip ve uçuş izleme özellikleri
+
+Bu temel altyapı oluşturulduktan sonra turist odaklı özellikler
+(özellikle AI Concierge'in gerçek yapılması) RayRide'i rakiplerinden
+farklılaştıracak en güçlü unsurlar olacaktır.
+
+================================================================================

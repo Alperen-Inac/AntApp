@@ -651,7 +651,7 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
               ),
               child: Column(
                 children: [
-                  _buildBookingInfoRow('Booking ID', '#ANT-20260225-0847'),
+                  _buildBookingInfoRow('Booking ID', '#RAY-20260225-0847'),
                   const SizedBox(height: 10),
                   _buildBookingInfoRow('Vehicle', widget.vehicleName),
                   const SizedBox(height: 10),

@@ -1,4 +1,4 @@
-# AntApp — Antalya Tourist Transfers
+# RayRide — Antalya Tourist Transfers
 
 A premium tourist transportation booking platform for the Turkish Riviera.
 

@@ -11,16 +11,16 @@ void main() {
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  runApp(const AntApp());
+  runApp(const RayRide());
 }
 
-class AntApp extends StatelessWidget {
-  const AntApp({super.key});
+class RayRide extends StatelessWidget {
+  const RayRide({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AntApp — Antalya Transfers',
+      title: 'RayRide — Antalya Transfers',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
       home: const BookingScreen(),
